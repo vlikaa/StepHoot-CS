@@ -8,14 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3da99259-5183-4c75-b891-ad1e8c1d6068" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StepHoot C#/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StepHoot CS/IStepHoot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StepHoot CS/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StepHoot CS/StepHoot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserLibrary/IUser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StepHoot C#.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StepHoot C#/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StepHoot C#/StepHoot C#.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/StepHoot CS.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StepHoot C#/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StepHoot C#/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StepHoot CS/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserLibrary/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserLibrary/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserLibrary/UserHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserLibrary/UserHelper.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +22,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/a6dbb800a47735bde43187350fd3aff4071c7f9c/src/libraries/System.Private.CoreLib/src/System/Char.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/StepHoot CS/bin/Debug/net7.0/StepHoot CS.runtimeconfig.json" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -86,7 +83,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1709835883680</updated>
-      <workItem from="1709835891345" duration="2764000" />
+      <workItem from="1709835891345" duration="10540000" />
     </task>
     <servers />
   </component>
@@ -95,5 +92,24 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/UserLibrary/UserHelper.cs</url>
+          <line>9</line>
+          <properties documentPath="E:\RiderProjects\StepHoot-CS\UserLibrary\UserHelper.cs" initialLine="9" containingFunctionPresentation="Method 'IsCorrectName'">
+            <startOffsets>
+              <option value="282" />
+            </startOffsets>
+            <endOffsets>
+              <option value="295" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
