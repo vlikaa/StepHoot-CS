@@ -4,6 +4,6 @@ namespace StepHoot_C_;
 
 interface IStepHoot
 {
-    bool Registration(User? user);
-    bool Login(User? user);
+    void Registration(User? user);
+    User? Login(User? user);
 }

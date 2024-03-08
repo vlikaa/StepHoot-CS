@@ -4,21 +4,46 @@ using UserLibrary;
 
 var stepHoot = new StepHoot();
 
-// Console.WriteLine(stepHoot.Registration(new User
-// {
-//     Name = "Name",
-//     Surname = "Surname",
-//     Phone = "555-333",
-//     Login = "Login",
-//     Password = "Password"
-// }));
-
-Console.WriteLine(UserHelper.IsCorrectUser(new User
+var user = new User
 {
-    Name = "Name",
-    Surname = "Surname",
+    Name = "Ali",
+    Surname = "Veliyev",
     Phone = "0513379420",
-    Login = "Valie_gi50",
-    Password = "Password"
-}));
+    Login = "vlikaa",
+    Password = "Interpretation_1"
+};
 
+Console.WriteLine($"Имя: {UserHelper.IsCorrectName(user)}");
+Console.WriteLine($"Фамилия: {UserHelper.IsCorrectSurname(user)}");
+Console.WriteLine($"Номер: {UserHelper.IsCorrectPhone(user)}");
+Console.WriteLine($"Логин: {UserHelper.IsCorrectLogin(user)}");
+Console.WriteLine($"Пароль: {UserHelper.IsCorrectPassword(user)}");
+Console.WriteLine($"Юзер: {UserHelper.IsCorrectUser(user)}");
+
+try
+{
+    stepHoot.Registration(user);
+}
+catch (ArgumentNullException e)
+{
+    Console.WriteLine("привет, ты передал NULL");
+}
+catch (InvalidOperationException e)
+{
+    Console.WriteLine("привет, такой логин уже есть, поменяй его");
+}
+catch (ArgumentException e)
+{
+    Console.WriteLine("привет, твой юзер инвалид");
+}
+
+try
+{
+    var correctUser = stepHoot.Login(user);
+
+    Console.WriteLine(correctUser!.Login);
+}
+catch (ArgumentNullException e)
+{
+    Console.WriteLine("привет, ты передал NULL");
+}
