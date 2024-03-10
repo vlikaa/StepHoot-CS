@@ -8,9 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3da99259-5183-4c75-b891-ad1e8c1d6068" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/StepHoot CS/CLI.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/Answer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/IAnswer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/IQuestion.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/ITestCategory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/Question.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/Test.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TestLibrary/TestCategory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StepHoot C#/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StepHoot C#/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StepHoot CS/IStepHoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/IStepHoot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StepHoot CS.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StepHoot CS/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StepHoot CS/StepHoot CS.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/StepHoot CS.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StepHoot CS/StepHoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StepHoot CS/StepHoot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UserLibrary/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserLibrary/User.cs" afterDir="false" />
     </list>
@@ -40,7 +49,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.StepHoot C#.executor": "Run",
+    ".NET Project.StepHoot C#.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -87,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1709835883680</updated>
-      <workItem from="1709835891345" duration="17557000" />
+      <workItem from="1709835891345" duration="28130000" />
     </task>
     <servers />
   </component>
@@ -96,5 +105,24 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/StepHoot CS/Program.cs</url>
+          <line>59</line>
+          <properties documentPath="E:\RiderProjects\StepHoot-CS\StepHoot CS\Program.cs" initialLine="59" containingFunctionPresentation="">
+            <startOffsets>
+              <option value="1052" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1103" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

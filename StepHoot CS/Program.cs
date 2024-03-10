@@ -1,28 +1,19 @@
 ﻿
+// TODO: допиши GetUserByIndex
+// TODO: допиши GetUserByIndex
+// TODO: допиши GetUserByIndex
+
+
+using System.Security.Cryptography;
 using StepHoot_C_;
 using UserLibrary;
 
 var stepHoot = new StepHoot();
-
-var user = new User
-{
-    Name = "Ali",
-    Surname = "Veliyev",
-    Phone = "0513379420",
-    Login = "vlikaa",
-    Password = "Interpretation_1"
-};
-
-Console.WriteLine($"Имя: {UserHelper.IsCorrectName(user)}");
-Console.WriteLine($"Фамилия: {UserHelper.IsCorrectSurname(user)}");
-Console.WriteLine($"Номер: {UserHelper.IsCorrectPhone(user)}");
-Console.WriteLine($"Логин: {UserHelper.IsCorrectLogin(user)}");
-Console.WriteLine($"Пароль: {UserHelper.IsCorrectPassword(user)}");
-Console.WriteLine($"Юзер: {UserHelper.IsCorrectUser(user)}");
+User? correctUser = null;
 
 try
 {
-    stepHoot.Registration(user);
+    // stepHoot.Registration(CLI.PrintRegistrationMenu());
 }
 catch (ArgumentNullException e)
 {
@@ -39,11 +30,54 @@ catch (ArgumentException e)
 
 try
 {
-    var correctUser = stepHoot.Login(user);
-
-    Console.WriteLine(correctUser!.Login);
+    correctUser = stepHoot.Login(CLI.PrintLoginMenu());
 }
 catch (ArgumentNullException e)
 {
     Console.WriteLine("привет, ты передал NULL");
+}
+
+
+while (true)
+{
+    if (correctUser!.IsAdmin)
+    {
+        switch (CLI.PrintAdminMenu())
+        {
+            case 0:
+                correctUser = stepHoot.Login(CLI.PrintLoginMenu());
+                break;
+            case 1:
+                switch (CLI.PrintUsersSettingMenu())
+                {
+                    case 1:
+                        stepHoot.Registration(CLI.PrintRegistrationMenu());
+                        break;
+                    case 2:
+                        // stepHoot.RemoveUser(CLI.PrintRemoveMenu());
+                        break;
+                }
+                break;
+            case 2:
+                CLI.PrintTestsSettingMenu();
+                break;
+            case 3:
+                CLI.PrintStatMenu();
+                break;
+
+        }
+    }
+    else
+    {
+        switch (CLI.PrintUserMenu())
+        {
+            case 0:
+                correctUser = stepHoot.Login(CLI.PrintLoginMenu());
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+    }
 }
