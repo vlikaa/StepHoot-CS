@@ -112,13 +112,12 @@ public static class CLI
         return int.Parse(Console.ReadLine()!);
     }
     
-    public static int PrintRemoveMenu()
+    public static User PrintSelectUserMenu()
     {
         var users = File.ReadAllLines(StepHoot.Path);
-
-        if (users.Length == 0)
-            throw new InvalidOperationException("User list is empty");
         
+        if (users.Length <= 1)
+            throw new InvalidOperationException("\n    Users list is empty.");
         
         var index = 0;
         
@@ -129,9 +128,32 @@ public static class CLI
             Console.WriteLine($"{++index}. {JsonSerializer.Deserialize<User>(userStr)?.Login}");
         }
 
-        return Console.Read();
+        return StepHoot.GetUserByIndex(int.Parse(Console.ReadLine()!))!;
+    }
+    
+    public static int PrintChangeUserDataMenu()
+    {
+        Console.Clear();
+        
+        Console.WriteLine("    Change user data menu:" +
+                          "\n\t1. Change name" +
+                          "\n\t2. Change surname" +
+                          "\n\t3. Change phone number" +
+                          "\n\t4. Change login" +
+                          "\n\t5. Change password" +
+                          "\n\t0. Back");
+        
+        return int.Parse(Console.ReadLine()!);
     }
 
+    public static string PrintChangeUserName()
+    {
+        Console.Clear();
+        
+        Console.Write("\tEnter name: ");
+        
+        return Console.ReadLine()!;
+    }
     
     
 

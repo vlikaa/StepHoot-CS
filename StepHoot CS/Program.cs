@@ -1,10 +1,4 @@
 ﻿
-// TODO: допиши GetUserByIndex
-// TODO: допиши GetUserByIndex
-// TODO: допиши GetUserByIndex
-
-
-using System.Security.Cryptography;
 using StepHoot_C_;
 using UserLibrary;
 
@@ -48,15 +42,52 @@ while (true)
                 correctUser = stepHoot.Login(CLI.PrintLoginMenu());
                 break;
             case 1:
-                switch (CLI.PrintUsersSettingMenu())
+                var flagUserSettingsMenu = true;
+                // циклы нужны только чтоб не возвращаться в главное меню, а остаться в текущем
+                while (flagUserSettingsMenu)
                 {
-                    case 1:
-                        stepHoot.Registration(CLI.PrintRegistrationMenu());
-                        break;
-                    case 2:
-                        // stepHoot.RemoveUser(CLI.PrintRemoveMenu());
-                        break;
+                    switch (CLI.PrintUsersSettingMenu())
+                    {
+                        case 1:
+                            stepHoot.Registration(CLI.PrintRegistrationMenu());
+                            break;
+                        case 2:
+                            try
+                            {
+                                stepHoot.RemoveUser(CLI.PrintSelectUserMenu());
+                            }
+                            catch (InvalidOperationException e)
+                            {
+                                Console.Clear();
+                                Console.WriteLine(e.Message);
+                                Console.ReadKey();
+                            }
+                            break;
+                        case 3:
+                            var flagChangeUserDataMenu = true;
+                            while (flagChangeUserDataMenu)
+                            {
+                                switch (CLI.PrintChangeUserDataMenu())
+                                {
+                                    case 1:
+                                        stepHoot.ChangeUserName(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserName());
+                                        break;
+                                    case 2:
+                                        break;
+                                    case 3:
+                                        break;
+                                    default:
+                                        flagChangeUserDataMenu = false;
+                                        break;
+                                }
+                            }
+                            break;
+                        default:
+                            flagUserSettingsMenu = false;
+                            break;
+                    }
                 }
+
                 break;
             case 2:
                 CLI.PrintTestsSettingMenu();

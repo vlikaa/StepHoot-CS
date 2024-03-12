@@ -13,7 +13,7 @@ class StepHoot : IStepHoot
         if (user == null)
             throw new ArgumentNullException($"User is null");
 
-        if (GetUserByLogin(user.Login) != null || GetUserByPhone(user.Phone) != null)
+        if (GetUser(user) != null)
             throw new InvalidOperationException("User must be unique");
 
         if (!UserHelper.IsCorrectUser(user))
@@ -56,12 +56,53 @@ class StepHoot : IStepHoot
 
         File.WriteAllLines(Path, users.ToArray());
     }
-
-    public void AddTestCategory(TestCategory category)
-    {
-        
-    }
     
+    public static User? GetUserByIndex(int index)
+    {
+        var users = File.ReadAllLines(Path);
+
+        if (index < 0 || index > users.Length + 1)
+            throw new IndexOutOfRangeException("Incorrect index.");
+
+        var correctIndex = 0;
+        
+        foreach (var user in users)
+        {
+            if (index == correctIndex)
+                return JsonSerializer.Deserialize<User>(user);
+            
+            ++correctIndex;
+        }
+
+        return null;
+    }
+
+    public void ChangeUserName(User user, string name)
+    {
+        var usersStr = File.ReadAllLines(Path);
+        var users = new List<User>();
+        
+        foreach (var u in usersStr)
+        {
+            var deserializedUser = JsonSerializer.Deserialize<User>(u);
+            if (user.Login == deserializedUser?.Login)
+                deserializedUser.Name = name;
+
+            if (deserializedUser != null)
+                users.Add(deserializedUser);
+        }
+
+        usersStr,
+        foreach (var u in users)
+        {
+            JsonSerializer.Serialize(u);
+            
+            
+        }
+        
+        File.WriteAllLines(Path, users.ToArray());
+    }
+
     private User? GetUser(User user)
     {
         var usersStr = File.ReadAllLines(Path);
@@ -74,16 +115,4 @@ class StepHoot : IStepHoot
             JsonSerializer.Deserialize<User>(userStr)).OfType<User>().FirstOrDefault(deserializedUser =>
             user.Login == deserializedUser.Login);
     }
-    
-    // public static User? GetUserByIndex(int index)
-    // {
-    //     if (string.IsNullOrEmpty(login))
-    //         throw new ArgumentNullException($"Login is null or empty");
-    //     
-    //     var usersStr = File.ReadAllLines(Path);
-    //     
-    //     return usersStr.Select(userStr =>
-    //         JsonSerializer.Deserialize<User>(userStr)).OfType<User>().FirstOrDefault(deserializedUser =>
-    //         login == deserializedUser.Login);
-    // }
 }
