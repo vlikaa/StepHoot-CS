@@ -73,8 +73,16 @@ while (true)
                                         stepHoot.ChangeUserName(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserName());
                                         break;
                                     case 2:
+                                        stepHoot.ChangeUserSurname(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserSurname());
                                         break;
                                     case 3:
+                                        stepHoot.ChangeUserPhone(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserPhone());
+                                        break;
+                                    case 4:
+                                        stepHoot.ChangeUserLogin(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserLogin());
+                                        break;
+                                    case 5:
+                                        stepHoot.ChangeUserPassword(CLI.PrintSelectUserMenu(), CLI.PrintChangeUserPassword());
                                         break;
                                     default:
                                         flagChangeUserDataMenu = false;

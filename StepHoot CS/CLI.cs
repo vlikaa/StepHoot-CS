@@ -150,7 +150,43 @@ public static class CLI
     {
         Console.Clear();
         
-        Console.Write("\tEnter name: ");
+        Console.Write("\tEnter new name: ");
+        
+        return Console.ReadLine()!;
+    }
+
+    public static string PrintChangeUserSurname()
+    {
+        Console.Clear();
+        
+        Console.Write("\tEnter new surname: ");
+        
+        return Console.ReadLine()!;
+    }
+
+    public static string PrintChangeUserPhone()
+    {
+        Console.Clear();
+        
+        Console.Write("\tEnter new phone number: ");
+        
+        return Console.ReadLine()!;
+    }
+
+    public static string PrintChangeUserLogin()
+    {
+        Console.Clear();
+        
+        Console.Write("\tEnter new login: ");
+        
+        return Console.ReadLine()!;
+    }
+
+    public static string PrintChangeUserPassword()
+    {
+        Console.Clear();
+        
+        Console.Write("\tEnter new password: ");
         
         return Console.ReadLine()!;
     }

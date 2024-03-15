@@ -79,28 +79,127 @@ class StepHoot : IStepHoot
 
     public void ChangeUserName(User user, string name)
     {
-        var usersStr = File.ReadAllLines(Path);
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException($"Name is null or empty.");
+
+        if (!UserHelper.IsCorrectName(name))
+            throw new InvalidOperationException("Incorrect name for user.");
+        
+        var lines = File.ReadAllLines(Path);
         var users = new List<User>();
         
-        foreach (var u in usersStr)
+        foreach (var line in lines)
         {
-            var deserializedUser = JsonSerializer.Deserialize<User>(u);
-            if (user.Login == deserializedUser?.Login)
+            var deserializedUser = JsonSerializer.Deserialize<User>(line);
+            if (deserializedUser == null) continue;
+            if (user.Login == deserializedUser.Login)
                 deserializedUser.Name = name;
 
-            if (deserializedUser != null)
-                users.Add(deserializedUser);
+            users.Add(deserializedUser);
         }
 
-        usersStr,
-        foreach (var u in users)
-        {
-            JsonSerializer.Serialize(u);
-            
-            
-        }
+        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+    }
+
+    public void ChangeUserSurname(User user, string surname)
+    {
+        if (string.IsNullOrEmpty(surname))
+            throw new ArgumentNullException($"Surname is null or empty.");
+
+        if (!UserHelper.IsCorrectSurname(surname))
+            throw new InvalidOperationException("Incorrect surname for user.");
+
         
-        File.WriteAllLines(Path, users.ToArray());
+        var lines = File.ReadAllLines(Path);
+        var users = new List<User>();
+        
+        foreach (var line in lines)
+        {
+            var deserializedUser = JsonSerializer.Deserialize<User>(line);
+            if (deserializedUser == null) continue;
+            if (user.Login == deserializedUser.Login)
+                deserializedUser.Surname = surname;
+
+            users.Add(deserializedUser);
+        }
+
+        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+    }
+
+    public void ChangeUserPhone(User user, string phone)
+    {
+        if (string.IsNullOrEmpty(phone))
+            throw new ArgumentNullException($"Phone number is null or empty.");
+        
+        if (!UserHelper.IsCorrectPhone(phone))
+            throw new InvalidOperationException("Incorrect phone number for user.");
+
+        var lines = File.ReadAllLines(Path);
+        var users = new List<User>();
+        
+        foreach (var line in lines)
+        {
+            var deserializedUser = JsonSerializer.Deserialize<User>(line);
+            if (deserializedUser == null) continue;
+            if (user.Login == deserializedUser.Login)
+                deserializedUser.Phone = phone;
+
+            users.Add(deserializedUser);
+        }
+
+        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+    }
+
+    public void ChangeUserLogin(User user, string login)
+    {
+        if (string.IsNullOrEmpty(login))
+            throw new ArgumentNullException($"Login is null or empty.");
+
+        if (!UserHelper.IsCorrectLogin(login))
+            throw new InvalidOperationException("Incorrect login for user.");
+        
+        var lines = File.ReadAllLines(Path);
+        var users = new List<User>();
+        
+        foreach (var line in lines)
+        {
+            var deserializedUser = JsonSerializer.Deserialize<User>(line);
+            if (deserializedUser == null) continue;
+            if (user.Login == deserializedUser.Login)
+                deserializedUser.Login = login;
+
+            users.Add(deserializedUser);
+        }
+
+        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+    }
+
+    public void ChangeUserPassword(User user, string password)
+    {
+        if (string.IsNullOrEmpty(password))
+            throw new ArgumentNullException($"Password is null or empty.");
+        
+        var lines = File.ReadAllLines(Path);
+        var users = new List<User>();
+        
+        foreach (var line in lines)
+        {
+            var deserializedUser = JsonSerializer.Deserialize<User>(line);
+            if (deserializedUser == null) continue;
+            if (user.Login == deserializedUser.Login)
+            {
+                deserializedUser.Password = password;
+                
+                // Проверка на Correct Password находится тут, потому что метод должнен принять User-а в параметрах
+                // поэтому проверка происходит после того как Password у User-a изменен
+                if (!UserHelper.IsCorrectPassword(deserializedUser))
+                    throw new InvalidOperationException("Incorrect password for user.");
+            }
+
+            users.Add(deserializedUser);
+        }
+
+        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
     private User? GetUser(User user)
@@ -115,4 +214,5 @@ class StepHoot : IStepHoot
             JsonSerializer.Deserialize<User>(userStr)).OfType<User>().FirstOrDefault(deserializedUser =>
             user.Login == deserializedUser.Login);
     }
+    
 }
