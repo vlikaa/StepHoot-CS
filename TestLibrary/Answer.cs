@@ -1,7 +1,7 @@
 namespace TestLibrary;
 
-public class Answer : IAnswer
+public class Answer
 {
-    string IAnswer.Answer { get; set; } = string.Empty;
+    public string AnswerName { get; set; } = string.Empty;
     public bool IsCorrect { get; set; } = default;
 }

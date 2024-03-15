@@ -4,9 +4,10 @@ using TestLibrary;
 
 namespace StepHoot_C_;
 
-class StepHoot : IStepHoot
+class StepHoot
 {
-    public static readonly string Path = "users.json"; 
+    public static readonly string UsersPath = "users.json"; 
+    public static readonly string TestsPath = "tests.json"; 
     
     public void Registration(User? user)
     {
@@ -19,10 +20,10 @@ class StepHoot : IStepHoot
         if (!UserHelper.IsCorrectUser(user))
             throw new ArgumentException("Invalid User");
 
-        if (File.ReadAllLines(Path).Length == 0)
+        if (File.ReadAllLines(UsersPath).Length == 0)
             user.IsAdmin = true;
             
-        File.AppendAllText(Path, JsonSerializer.Serialize(user) + '\n');
+        File.AppendAllText(UsersPath, JsonSerializer.Serialize(user) + '\n');
     }
 
     public User? Login(User? user)
@@ -43,7 +44,7 @@ class StepHoot : IStepHoot
         if (GetUser(user) == null)
             throw new InvalidOperationException("User not found");
 
-        var usersStr = File.ReadAllLines(Path);
+        var usersStr = File.ReadAllLines(UsersPath);
         var users = new List<string>();
         
         foreach (var userStr in usersStr)
@@ -54,12 +55,12 @@ class StepHoot : IStepHoot
                 users.Add(userStr); 
         }
 
-        File.WriteAllLines(Path, users.ToArray());
+        File.WriteAllLines(UsersPath, users.ToArray());
     }
     
     public static User? GetUserByIndex(int index)
     {
-        var users = File.ReadAllLines(Path);
+        var users = File.ReadAllLines(UsersPath);
 
         if (index < 0 || index > users.Length + 1)
             throw new IndexOutOfRangeException("Incorrect index.");
@@ -76,16 +77,37 @@ class StepHoot : IStepHoot
 
         return null;
     }
+    
+    public static TestCategory? GetTestCategoryByIndex(int index)
+    {
+        var categories = File.ReadAllLines(TestsPath);
+
+        if (index < 0 || index > categories.Length + 1)
+            throw new IndexOutOfRangeException("Incorrect index.");
+
+        var correctIndex = 0;
+        
+        foreach (var category in categories)
+        {
+            if (index == correctIndex)
+                return JsonSerializer.Deserialize<TestCategory>(category);
+            
+            ++correctIndex;
+        }
+
+        return null;
+    }
 
     public void ChangeUserName(User user, string name)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentNullException($"Name is null or empty.");
+        // Нашел такой прикол в исходном коде,
+        // до этого использовал проверку на string.IsNullOrEmpty();
+        ArgumentException.ThrowIfNullOrEmpty(name, "Name is null or empty");
 
         if (!UserHelper.IsCorrectName(name))
             throw new InvalidOperationException("Incorrect name for user.");
         
-        var lines = File.ReadAllLines(Path);
+        var lines = File.ReadAllLines(UsersPath);
         var users = new List<User>();
         
         foreach (var line in lines)
@@ -98,7 +120,7 @@ class StepHoot : IStepHoot
             users.Add(deserializedUser);
         }
 
-        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+        File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
     public void ChangeUserSurname(User user, string surname)
@@ -110,7 +132,7 @@ class StepHoot : IStepHoot
             throw new InvalidOperationException("Incorrect surname for user.");
 
         
-        var lines = File.ReadAllLines(Path);
+        var lines = File.ReadAllLines(UsersPath);
         var users = new List<User>();
         
         foreach (var line in lines)
@@ -123,7 +145,7 @@ class StepHoot : IStepHoot
             users.Add(deserializedUser);
         }
 
-        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+        File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
     public void ChangeUserPhone(User user, string phone)
@@ -134,7 +156,7 @@ class StepHoot : IStepHoot
         if (!UserHelper.IsCorrectPhone(phone))
             throw new InvalidOperationException("Incorrect phone number for user.");
 
-        var lines = File.ReadAllLines(Path);
+        var lines = File.ReadAllLines(UsersPath);
         var users = new List<User>();
         
         foreach (var line in lines)
@@ -147,7 +169,7 @@ class StepHoot : IStepHoot
             users.Add(deserializedUser);
         }
 
-        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+        File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
     public void ChangeUserLogin(User user, string login)
@@ -158,7 +180,7 @@ class StepHoot : IStepHoot
         if (!UserHelper.IsCorrectLogin(login))
             throw new InvalidOperationException("Incorrect login for user.");
         
-        var lines = File.ReadAllLines(Path);
+        var lines = File.ReadAllLines(UsersPath);
         var users = new List<User>();
         
         foreach (var line in lines)
@@ -171,7 +193,7 @@ class StepHoot : IStepHoot
             users.Add(deserializedUser);
         }
 
-        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+        File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
     public void ChangeUserPassword(User user, string password)
@@ -179,7 +201,7 @@ class StepHoot : IStepHoot
         if (string.IsNullOrEmpty(password))
             throw new ArgumentNullException($"Password is null or empty.");
         
-        var lines = File.ReadAllLines(Path);
+        var lines = File.ReadAllLines(UsersPath);
         var users = new List<User>();
         
         foreach (var line in lines)
@@ -199,12 +221,34 @@ class StepHoot : IStepHoot
             users.Add(deserializedUser);
         }
 
-        File.WriteAllLines(Path, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
+        File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
 
+    public void AddTestCategory(TestCategory testCategory)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory);
+        
+        if (!File.Exists(TestsPath))
+            File.Create(TestsPath).Close();
+        
+        File.AppendAllText(TestsPath,JsonSerializer.Serialize(testCategory) + '\n');
+    }
+
+    public void RemoveTestCategory(TestCategory testCategory)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, $"Category is null");
+
+        if (GetTestCategory(testCategory) == null)
+            throw new InvalidOperationException("Category not found");
+
+        var lines = File.ReadAllLines(TestsPath);
+        // LINQ метод написал Rider
+        File.WriteAllLines(TestsPath, (from line in lines let deserializedUser = JsonSerializer.Deserialize<TestCategory>(line) where testCategory.TestCategoryName != deserializedUser?.TestCategoryName select line).ToArray());        
+    }
+    
     private User? GetUser(User user)
     {
-        var usersStr = File.ReadAllLines(Path);
+        var usersStr = File.ReadAllLines(UsersPath);
 
         // Generated by Rider, Гы
         // LINQ метод сначала преобразует каждый элемент usersStr в User,
@@ -213,6 +257,15 @@ class StepHoot : IStepHoot
         return usersStr.Select(userStr =>
             JsonSerializer.Deserialize<User>(userStr)).OfType<User>().FirstOrDefault(deserializedUser =>
             user.Login == deserializedUser.Login);
+    }
+    
+    private TestCategory? GetTestCategory(TestCategory testCategory)
+    {
+        var lines = File.ReadAllLines(TestsPath);
+        
+        return lines.Select(line =>
+            JsonSerializer.Deserialize<TestCategory>(line)).OfType<TestCategory>().FirstOrDefault(deserializedCategory =>
+            testCategory.TestCategoryName == deserializedCategory.TestCategoryName);
     }
     
 }

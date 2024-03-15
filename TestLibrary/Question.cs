@@ -1,24 +1,17 @@
 namespace TestLibrary;
 
-class Question : IQuestion
+public class Question
 {
-    string IQuestion.Question { get; set; } = string.Empty;
-    private readonly List<Answer> _answers = new();
+    public string QuestionName { get; set; } = string.Empty;
+    private readonly List<Answer> _answers = new(); 
     
-    public void AddAnswer(Answer? answer)
+    public void AddAnswer(Answer answer)
     {
-        if (answer != null)
-        {
-            Console.WriteLine(answer.IsCorrect);
-            _answers.Add(answer);
-        }
-        
-        
-        throw new NotImplementedException();
+        _answers.Add(answer);
     }
 
     public void RemoveAnswer(Answer answer)
     {
-        throw new NotImplementedException();
+        _answers.Remove(answer);
     }
 }

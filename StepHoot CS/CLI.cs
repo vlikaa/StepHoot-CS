@@ -1,4 +1,5 @@
 using System.Text.Json;
+using TestLibrary;
 using UserLibrary;
 
 namespace StepHoot_C_;
@@ -114,7 +115,7 @@ public static class CLI
     
     public static User PrintSelectUserMenu()
     {
-        var users = File.ReadAllLines(StepHoot.Path);
+        var users = File.ReadAllLines(StepHoot.UsersPath);
         
         if (users.Length <= 1)
             throw new InvalidOperationException("\n    Users list is empty.");
@@ -123,7 +124,7 @@ public static class CLI
         
         Console.Clear();
         Console.WriteLine("    Select user:");
-        foreach (var userStr in File.ReadAllLines(StepHoot.Path).Skip(1))
+        foreach (var userStr in File.ReadAllLines(StepHoot.UsersPath).Skip(1))
         {
             Console.WriteLine($"{++index}. {JsonSerializer.Deserialize<User>(userStr)?.Login}");
         }
@@ -190,7 +191,50 @@ public static class CLI
         
         return Console.ReadLine()!;
     }
-    
-    
 
+    public static int PrintTestCategoriesMenu()
+    {
+        Console.Clear();
+        
+        Console.WriteLine("    Test categories setting:" +
+                          "\n\t1. Add test category" +
+                          "\n\t2. Remove test category" +
+                          "\n\t0. Back");
+        
+        return int.Parse(Console.ReadLine()!);
+    }
+    
+    public static TestCategory PrintAddTestCategory()
+    {
+        Console.Clear();
+
+        Console.Write("\tEnter category name: ");
+
+        var testCategory = new TestCategory
+        {
+            TestCategoryName = Console.ReadLine()! 
+        };
+
+        return testCategory;
+    }
+
+    public static TestCategory PrintSelectTestCategoryMenu()
+    {
+        var lines = File.ReadAllLines(StepHoot.TestsPath);
+        
+        
+        if (lines.Length < 1)
+            throw new InvalidOperationException("\n    Test categories list is empty.");
+
+        var index = 0;
+        
+        Console.Clear();
+        Console.WriteLine("    Select category:");
+        foreach (var line in lines)
+        {
+            Console.WriteLine($"{++index}. {JsonSerializer.Deserialize<TestCategory>(line)?.TestCategoryName}");
+        }
+        
+        return StepHoot.GetTestCategoryByIndex(int.Parse(Console.ReadLine()!) - 1)!;
+    }
 }
