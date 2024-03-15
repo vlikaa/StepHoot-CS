@@ -222,7 +222,6 @@ public static class CLI
     {
         var lines = File.ReadAllLines(StepHoot.TestsPath);
         
-        
         if (lines.Length < 1)
             throw new InvalidOperationException("\n    Test categories list is empty.");
 
@@ -236,5 +235,50 @@ public static class CLI
         }
         
         return StepHoot.GetTestCategoryByIndex(int.Parse(Console.ReadLine()!) - 1)!;
+    }
+
+    public static int PrintTestsMenu()
+    {
+        Console.Clear();
+        
+        Console.WriteLine("    Tests setting:" +
+                          "\n\t1. Add test" +
+                          "\n\t2. Remove test" +
+                          "\n\t0. Back");
+        
+        return int.Parse(Console.ReadLine()!);
+    }
+    
+    public static Test PrintAddTest()
+    {
+        Console.Clear();
+
+        Console.Write("\tEnter test name: ");
+
+        var test = new Test
+        {
+            TestName = Console.ReadLine()! 
+        };
+
+        return test;
+    }
+
+    public static Test PrintSelectTestMenu(TestCategory testCategory)
+    {
+        var tests = testCategory.Tests;
+        
+        if (tests.Count < 1)
+            throw new InvalidOperationException("\n    Tests list is empty.");
+        
+        var index = 0;
+        
+        Console.Clear();
+        Console.WriteLine("    Select test:");
+        foreach (var test in tests)
+        {
+            Console.WriteLine($"{++index}. {test.TestName}");
+        }
+        
+        return StepHoot.GetTestByIndex(testCategory, int.Parse(Console.ReadLine()!) - 1)!;
     }
 }

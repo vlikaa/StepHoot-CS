@@ -41,9 +41,6 @@ class StepHoot
         if (user == null)
             throw new ArgumentNullException($"User is null");
 
-        if (GetUser(user) == null)
-            throw new InvalidOperationException("User not found");
-
         var usersStr = File.ReadAllLines(UsersPath);
         var users = new List<string>();
         
@@ -77,7 +74,6 @@ class StepHoot
 
         return null;
     }
-    
     public static TestCategory? GetTestCategoryByIndex(int index)
     {
         var categories = File.ReadAllLines(TestsPath);
@@ -91,6 +87,25 @@ class StepHoot
         {
             if (index == correctIndex)
                 return JsonSerializer.Deserialize<TestCategory>(category);
+            
+            ++correctIndex;
+        }
+
+        return null;
+    }
+    public static Test? GetTestByIndex(TestCategory category, int index)
+    {
+        var tests = category.Tests;
+        
+        if (index < 0 || index > tests.Count + 1)
+            throw new IndexOutOfRangeException("Incorrect index.");
+
+        var correctIndex = 0;
+        
+        foreach (var test in tests)
+        {
+            if (index == correctIndex)
+                return test;
             
             ++correctIndex;
         }
@@ -226,7 +241,7 @@ class StepHoot
 
     public void AddTestCategory(TestCategory testCategory)
     {
-        ArgumentNullException.ThrowIfNull(testCategory);
+        ArgumentNullException.ThrowIfNull(testCategory, "Test category is null.");
         
         if (!File.Exists(TestsPath))
             File.Create(TestsPath).Close();
@@ -234,12 +249,35 @@ class StepHoot
         File.AppendAllText(TestsPath,JsonSerializer.Serialize(testCategory) + '\n');
     }
 
+    public void AddTest(TestCategory testCategory, Test test)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, "Test category is null.");
+        ArgumentNullException.ThrowIfNull(test, "Test is null.");
+        
+        testCategory.AddTest(test);
+
+        var lines = File.ReadAllLines(TestsPath);
+        var newTestCategories = new List<string>();
+
+        foreach (var line in lines)
+        {
+            var deserializedCategory = JsonSerializer.Deserialize<TestCategory>(line);
+
+            if (testCategory.TestCategoryName == deserializedCategory?.TestCategoryName)
+            {
+                newTestCategories.Add(JsonSerializer.Serialize(testCategory));
+                continue;
+            }
+            
+            newTestCategories.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newTestCategories.ToArray());
+    }
+
     public void RemoveTestCategory(TestCategory testCategory)
     {
         ArgumentNullException.ThrowIfNull(testCategory, $"Category is null");
-
-        if (GetTestCategory(testCategory) == null)
-            throw new InvalidOperationException("Category not found");
 
         var lines = File.ReadAllLines(TestsPath);
         // LINQ метод написал Rider
@@ -258,14 +296,4 @@ class StepHoot
             JsonSerializer.Deserialize<User>(userStr)).OfType<User>().FirstOrDefault(deserializedUser =>
             user.Login == deserializedUser.Login);
     }
-    
-    private TestCategory? GetTestCategory(TestCategory testCategory)
-    {
-        var lines = File.ReadAllLines(TestsPath);
-        
-        return lines.Select(line =>
-            JsonSerializer.Deserialize<TestCategory>(line)).OfType<TestCategory>().FirstOrDefault(deserializedCategory =>
-            testCategory.TestCategoryName == deserializedCategory.TestCategoryName);
-    }
-    
 }

@@ -1,4 +1,6 @@
 ﻿
+// TODO: Допиши добавление удаление тестов и тд
+
 using StepHoot_C_;
 using UserLibrary;
 
@@ -121,18 +123,34 @@ while (true)
                             }
                             break;
                         case 2:
-                            // switch (CLI.PrintTestsMenu())
-                            // {
-                            //     case 1:
-                            //         stepHoot.AddTest(CLI.PrintSelectTestCategoryMenu(), CLI.PrintAddTest());
-                            //         break;
-                            //     case 2:
-                            //         break;
-                            //     default:
-                            //         break;
-                            // }
+                            var flagTestsMenu = true;
+                            while (flagTestsMenu)
+                            {
+                                switch (CLI.PrintTestsMenu())
+                                {
+                                    case 1:
+                                        stepHoot.AddTest(CLI.PrintSelectTestCategoryMenu(), CLI.PrintAddTest());
+                                        break;
+                                    case 2:
+                                        break;
+                                    default:
+                                        flagTestsMenu = false;
+                                        break;
+                                }
+                            }
                             break;
                         case 3:
+                            switch (CLI.PrintQuestionMenu)
+                            {
+                                case 1:
+                                    var correctCategory = CLI.PrintSelectTestCategoryMenu(); 
+                                    stepHoot.AddQuestion(correctCategory, CLI.PrintSelectTestMenu(correctCategory), CLI.PrintAddQuestion);
+                                    break;
+                                case 2:
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case 4:
                             break;
