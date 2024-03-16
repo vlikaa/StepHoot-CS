@@ -1,16 +1,20 @@
+using System.Reflection.Metadata;
 using UserLibrary;
 
 namespace StepHoot_C_;
 
 public static class GameRule
 {
+    private static readonly string _path = "users.json";
     public static void Start(StepHoot stepHoot)
     {
         User? correctUser = null;
 
         try
         {
-            if (File.ReadAllLines("users.json").Length == 0)
+            if (!File.Exists(_path))
+                File.Create(_path).Close();
+            if (File.ReadAllLines(_path).Length == 0)
                 stepHoot.Registration(CLI.PrintRegistrationMenu());
         }
         catch (ArgumentNullException e)

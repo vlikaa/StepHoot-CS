@@ -13,6 +13,7 @@ public static class CLI
         
         Console.Clear();
         
+        Console.WriteLine("\tCreate account menu");
         Console.Write("\tEnter name: ");
         user.Name = Console.ReadLine()!;
         if (string.IsNullOrEmpty(user.Name))
@@ -39,7 +40,9 @@ public static class CLI
         var user = new User();
 
         Console.Clear();
-        
+
+        Console.WriteLine("\tLogin menu.\n");
+
         Console.Write("\tEnter login: ");
         user.Login = Console.ReadLine() ?? throw new InvalidOperationException("User.Login is null or empty");
         
