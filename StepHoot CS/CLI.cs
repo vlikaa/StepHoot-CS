@@ -203,7 +203,6 @@ public static class CLI
         
         return int.Parse(Console.ReadLine()!);
     }
-    
     public static TestCategory PrintAddTestCategory()
     {
         Console.Clear();
@@ -217,7 +216,6 @@ public static class CLI
 
         return testCategory;
     }
-
     public static TestCategory PrintSelectTestCategoryMenu()
     {
         var lines = File.ReadAllLines(StepHoot.TestsPath);
@@ -236,7 +234,7 @@ public static class CLI
         
         return StepHoot.GetTestCategoryByIndex(int.Parse(Console.ReadLine()!) - 1)!;
     }
-
+    
     public static int PrintTestsMenu()
     {
         Console.Clear();
@@ -248,7 +246,6 @@ public static class CLI
         
         return int.Parse(Console.ReadLine()!);
     }
-    
     public static Test PrintAddTest()
     {
         Console.Clear();
@@ -262,7 +259,6 @@ public static class CLI
 
         return test;
     }
-
     public static Test PrintSelectTestMenu(TestCategory testCategory)
     {
         var tests = testCategory.Tests;
@@ -281,4 +277,133 @@ public static class CLI
         
         return StepHoot.GetTestByIndex(testCategory, int.Parse(Console.ReadLine()!) - 1)!;
     }
+    
+    public static int PrintQuestionsMenu()
+    {
+        Console.Clear();
+        
+        Console.WriteLine("    Questions setting:" +
+                          "\n\t1. Add question" +
+                          "\n\t2. Remove question" +
+                          "\n\t0. Back");
+        
+        return int.Parse(Console.ReadLine()!);
+    }
+    public static Question PrintAddQuestion()
+    {
+        Console.Clear();
+
+        Console.Write("\tEnter question name: ");
+
+        var question = new Question
+        {
+            QuestionName = Console.ReadLine()! 
+        };
+
+        return question;
+    }
+    public static Question PrintSelectQuestionMenu(Test test)
+    {
+        var questions = test.Questions;
+        
+        if (questions.Count < 1)
+            throw new InvalidOperationException("\n    Questions list is empty.");
+        
+        var index = 0;
+        
+        Console.Clear();
+        Console.WriteLine("    Select question:");
+        foreach (var question in questions)
+        {
+            Console.WriteLine($"{++index}. {question.QuestionName}");
+        }
+        
+        return StepHoot.GetQuestionByIndex(test, int.Parse(Console.ReadLine()!) - 1)!;
+    }
+    
+    public static int PrintAnswersMenu()
+    {
+        Console.Clear();
+        
+        Console.WriteLine("    Answers setting:" +
+                          "\n\t1. Add answer" +
+                          "\n\t2. Remove answer" +
+                          "\n\t0. Back");
+        
+        return int.Parse(Console.ReadLine()!);
+    }
+    public static Answer PrintAddAnswer()
+    {
+        Console.Clear();
+
+        Console.Write("\tEnter answer name: ");
+
+        var answer = new Answer
+        {
+            AnswerName = Console.ReadLine()! 
+        };
+        
+        Console.Write("\tIs correct answer[y/n]? ");
+        
+        var input = Console.ReadLine();
+        
+        if (input is "y" or "Y")
+            answer.IsCorrect = true;
+
+        return answer;
+    }
+    public static Answer PrintSelectAnswerMenu(Question question)
+    {
+        var answers = question.Answers;
+        
+        if (answers.Count < 1)
+            throw new InvalidOperationException("\n    Answers list is empty.");
+        
+        var index = 0;
+        
+        Console.Clear();
+        Console.WriteLine("    Select answer:");
+        foreach (var answer in answers)
+        {
+            Console.WriteLine($"{++index}. {answer.AnswerName}");
+        }
+        
+        return StepHoot.GetAnswerByIndex(question, int.Parse(Console.ReadLine()!) - 1)!;
+    }
+
+    public static int PrintTest(Test test)
+    {
+        Console.Clear();
+        Console.WriteLine("\n\t" + test.TestName + '\n');
+
+        var correctAnswersCount = 0;
+        
+        var questionNumber = 0;
+        
+        foreach (var question in test.Questions)
+        {
+            Console.WriteLine($"  {++questionNumber}. {question.QuestionName}");
+
+            var answerNumber = 0;
+            
+            foreach (var answer in question.Answers)
+            {
+                Console.WriteLine($"    {++answerNumber}) {answer.AnswerName}");
+            }
+
+            var userAnswer = int.Parse(Console.ReadLine()!);
+
+            var index = 0;
+            
+            foreach (var answer in question.Answers)
+            {
+                if (++index != userAnswer) continue;
+                if (answer.IsCorrect)
+                    ++correctAnswersCount;
+            }
+        }
+
+        return (correctAnswersCount / test.Questions.Count) * 12;
+    }
+    
 }

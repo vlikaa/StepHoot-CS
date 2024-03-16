@@ -4,7 +4,7 @@ using TestLibrary;
 
 namespace StepHoot_C_;
 
-class StepHoot
+public class StepHoot
 {
     public static readonly string UsersPath = "users.json"; 
     public static readonly string TestsPath = "tests.json"; 
@@ -23,6 +23,9 @@ class StepHoot
         if (File.ReadAllLines(UsersPath).Length == 0)
             user.IsAdmin = true;
             
+        if (!File.Exists(UsersPath))
+            File.Create(UsersPath).Close();
+        
         File.AppendAllText(UsersPath, JsonSerializer.Serialize(user) + '\n');
     }
 
@@ -112,6 +115,45 @@ class StepHoot
 
         return null;
     }
+    public static Question? GetQuestionByIndex(Test test, int index)
+    {
+        var questions = test.Questions;
+        
+        if (index < 0 || index > questions.Count + 1)
+            throw new IndexOutOfRangeException("Incorrect index.");
+
+        var correctIndex = 0;
+        
+        foreach (var question in questions)
+        {
+            if (index == correctIndex)
+                return question;
+            
+            ++correctIndex;
+        }
+
+        return null;
+    }
+    public static Answer? GetAnswerByIndex(Question question, int index)
+    {
+        var answers = question.Answers;
+        
+        if (index < 0 || index > answers.Count + 1)
+            throw new IndexOutOfRangeException("Incorrect index.");
+
+        var correctIndex = 0;
+        
+        foreach (var answer in answers)
+        {
+            if (index == correctIndex)
+                return answer;
+            
+            ++correctIndex;
+        }
+
+        return null;
+    }
+    
 
     public void ChangeUserName(User user, string name)
     {
@@ -137,7 +179,6 @@ class StepHoot
 
         File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
-
     public void ChangeUserSurname(User user, string surname)
     {
         if (string.IsNullOrEmpty(surname))
@@ -162,7 +203,6 @@ class StepHoot
 
         File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
-
     public void ChangeUserPhone(User user, string phone)
     {
         if (string.IsNullOrEmpty(phone))
@@ -186,7 +226,6 @@ class StepHoot
 
         File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
-
     public void ChangeUserLogin(User user, string login)
     {
         if (string.IsNullOrEmpty(login))
@@ -210,7 +249,6 @@ class StepHoot
 
         File.WriteAllLines(UsersPath, users.Select(u => JsonSerializer.Serialize(u)).ToArray());
     }
-
     public void ChangeUserPassword(User user, string password)
     {
         if (string.IsNullOrEmpty(password))
@@ -248,7 +286,6 @@ class StepHoot
         
         File.AppendAllText(TestsPath,JsonSerializer.Serialize(testCategory) + '\n');
     }
-
     public void AddTest(TestCategory testCategory, Test test)
     {
         ArgumentNullException.ThrowIfNull(testCategory, "Test category is null.");
@@ -273,6 +310,83 @@ class StepHoot
         }
         
         File.WriteAllLines(TestsPath, newTestCategories.ToArray());
+    } 
+    public void AddQuestion(TestCategory testCategory, Test test, Question question)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, "Test category is null.");
+        ArgumentNullException.ThrowIfNull(test, "Test is null.");
+        ArgumentNullException.ThrowIfNull(question, "Question is null.");
+        
+        var lines = File.ReadAllLines(TestsPath);
+        var newTestCategories = new List<string>();
+
+        foreach (var line in lines)
+        {
+            var deserializedCategory = JsonSerializer.Deserialize<TestCategory>(line);
+
+            if (testCategory.TestCategoryName == deserializedCategory?.TestCategoryName)
+            {
+                foreach (var t in testCategory.Tests)
+                {
+                    if (test.TestName == t.TestName)
+                    {
+                        t.AddQuestion(question);
+                        
+                        newTestCategories.Add(JsonSerializer.Serialize(testCategory));
+                        
+                        break;
+                    }
+                }
+                
+                continue;
+            }
+            
+            newTestCategories.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newTestCategories.ToArray());
+    }
+    public void AddAnswer(TestCategory testCategory, Test test, Question question, Answer answer)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, "Test category is null.");
+        ArgumentNullException.ThrowIfNull(test, "Test is null.");
+        ArgumentNullException.ThrowIfNull(question, "Question is null.");
+        ArgumentNullException.ThrowIfNull(answer, "Answer is null.");
+        
+        var lines = File.ReadAllLines(TestsPath);
+        var newTestCategories = new List<string>();
+
+        foreach (var line in lines)
+        {
+            var deserializedCategory = JsonSerializer.Deserialize<TestCategory>(line);
+
+            if (testCategory.TestCategoryName == deserializedCategory?.TestCategoryName)
+            {
+                foreach (var t in testCategory.Tests)
+                {
+                    if (test.TestName == t.TestName)
+                    {
+                        foreach (var q in test.Questions)
+                        {
+                            if (question.QuestionName == q.QuestionName)
+                            {
+                                q.AddAnswer(answer);
+                            
+                                newTestCategories.Add(JsonSerializer.Serialize(testCategory));
+                            
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                continue;
+            }
+            
+            newTestCategories.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newTestCategories.ToArray());
     }
 
     public void RemoveTestCategory(TestCategory testCategory)
@@ -282,6 +396,103 @@ class StepHoot
         var lines = File.ReadAllLines(TestsPath);
         // LINQ метод написал Rider
         File.WriteAllLines(TestsPath, (from line in lines let deserializedUser = JsonSerializer.Deserialize<TestCategory>(line) where testCategory.TestCategoryName != deserializedUser?.TestCategoryName select line).ToArray());        
+    }
+    public void RemoveTest(TestCategory testCategory, Test test)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, $"Category is null");
+        ArgumentNullException.ThrowIfNull(test, $"Test is null");
+
+        var lines = File.ReadAllLines(TestsPath);
+        var newLines = new List<string>();
+
+        foreach (var line in lines)
+        {
+            if (testCategory.TestCategoryName == JsonSerializer.Deserialize<TestCategory>(line)?.TestCategoryName)
+            {
+                testCategory.RemoveTest(test);
+                
+                newLines.Add(JsonSerializer.Serialize(testCategory));
+                
+                continue;
+            }
+            
+            newLines.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newLines);
+    }
+    public void RemoveQuestion(TestCategory testCategory, Test test, Question question)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, $"Category is null");
+        ArgumentNullException.ThrowIfNull(test, $"Test is null");
+        ArgumentNullException.ThrowIfNull(question, $"Question is null");
+
+        var lines = File.ReadAllLines(TestsPath);
+        var newLines = new List<string>();
+
+        foreach (var line in lines)
+        {
+            if (testCategory.TestCategoryName == JsonSerializer.Deserialize<TestCategory>(line)?.TestCategoryName)
+            {
+                foreach (var t in testCategory.Tests)
+                {
+                    if (test.TestName == t.TestName)
+                    {
+                        t.RemoveQuestion(question);
+                        
+                        newLines.Add(JsonSerializer.Serialize(testCategory));
+
+                        break;
+                    }
+                }
+                
+                continue;
+            }
+            
+            newLines.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newLines);
+    }
+    public void RemoveAnswer(TestCategory testCategory, Test test, Question question, Answer answer)
+    {
+        ArgumentNullException.ThrowIfNull(testCategory, $"Category is null");
+        ArgumentNullException.ThrowIfNull(test, $"Test is null");
+        ArgumentNullException.ThrowIfNull(question, $"Question is null");
+        ArgumentNullException.ThrowIfNull(answer, $"Answer is null");
+
+        var lines = File.ReadAllLines(TestsPath);
+        var newLines = new List<string>();
+
+        foreach (var line in lines)
+        {
+            if (testCategory.TestCategoryName == JsonSerializer.Deserialize<TestCategory>(line)?.TestCategoryName)
+            {
+                foreach (var t in testCategory.Tests)
+                {
+                    if (test.TestName == t.TestName)
+                    {
+                        foreach (var q in test.Questions)
+                        {
+                            if (question.QuestionName == q.QuestionName)
+                            {
+                                q.RemoveAnswer(answer);
+                                
+                                newLines.Add(JsonSerializer.Serialize(testCategory));
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                continue;
+            }
+            
+            newLines.Add(line);
+        }
+        
+        File.WriteAllLines(TestsPath, newLines);
     }
     
     private User? GetUser(User user)
